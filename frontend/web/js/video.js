@@ -33,10 +33,6 @@ $(document).ready(function () {
 			modal_fave_btn
 				.toggleClass('btn-primary', liked)
 				.toggleClass('btn-default', !liked);
-
-			modal_fave_btn.find('i')
-				.toggleClass('glyphicon-star', liked)
-				.toggleClass('glyphicon-star-empty', !liked);
 		}
 
 		updFaveBtn();
@@ -48,9 +44,9 @@ $(document).ready(function () {
 				url: box.attr('data-fave-url'),
 				contentType: 'application/json',
 				success: function (data) {
-					liked = data.liked;
-					modal_fave_btn.button('reset')
+					modal_fave_btn.button('reset');
 
+					liked = data.liked;
 					updFaveBtn();
 					box.attr('data-fave', +liked);
 				},

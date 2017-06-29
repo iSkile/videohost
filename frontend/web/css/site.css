@@ -1,5 +1,9 @@
 body {
-    /*background-color: #eff3f5;*/
+    background-color: #fafafa;
+}
+
+.breadcrumb {
+    border: 1px solid #dddddd;
 }
 
 .vertical-center {
@@ -15,9 +19,9 @@ body {
 .box {
     margin: 1em 0;
     /* text-align: center; */
-    /* box-shadow: 0 0 4px #cbcbcb; */
-    background-color: #fafafa;
-    border: 1px solid #fafafa;
+    box-shadow: 0 0 4px #cbcbcb;
+    background-color: #fff;
+    /*border: 1px solid #fafafa;*/
     cursor: pointer;
 }
 

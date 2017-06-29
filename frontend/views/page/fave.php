@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <div class="modal-body clearfix">
                     <button id="fave" data-checked="false" type="button" class="btn btn-primary pull-right">
-                        <i class="glyphicon glyphicon-star-empty"></i> Fave
+                        <i class="glyphicon glyphicon-star"></i> Fave
                     </button>
                     <p id="description"></p>
                 </div>
