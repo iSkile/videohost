@@ -1,4 +1,4 @@
-Yii 2 Advanced Project Template
+Yii 2 Advanced Project
 ===============================
 
 Yii 2 Advanced Project Template is a skeleton [Yii 2](http://www.yiiframework.com/) application best for
@@ -16,6 +16,13 @@ Documentation is at [docs/guide/README.md](docs/guide/README.md).
 [![Total Downloads](https://poser.pugx.org/yiisoft/yii2-app-advanced/downloads.png)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
 [![Build Status](https://travis-ci.org/yiisoft/yii2-app-advanced.svg?branch=master)](https://travis-ci.org/yiisoft/yii2-app-advanced)
 
+## How to install ##
+ 1. `composer init`
+ 2. `yii init`
+ 3. config database
+ 4. `yii migrate`
+ 5. `php yii rbac/init`
+ 
 DIRECTORY STRUCTURE
 -------------------
 
