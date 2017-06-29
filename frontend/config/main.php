@@ -14,15 +14,16 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
+            'baseUrl' => '',
         ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
+            'identityCookie' => ['name' => '_identity', 'httpOnly' => true],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
-            'name' => 'advanced-frontend',
+            'name' => 'advanced-session',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -36,14 +37,25 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'video/<name:[\w\.]+>' => 'site/video',
+                'image/<id:\d+>/<width:\d+>/<height:\d+>' => 'site/image',
+                'image/<id:\d+>/<width:\d+>' => 'site/image',
+                'image/<id:\d+>' => 'site/image',
+                'verify/<token:[-\w]+>' => 'site/verify',
+                'site/<id:\d+>' => 'site/view',
+                'site/<action:\w+>/<id:\d+>' => 'site/<action>',
+                'site/<action:\w+>' => 'site/<action>',
+                'fave' => 'page/fave',
+
+                '<section:[-\w]+>' => 'page/section',
+                '<section:[-\w]+>/<topic:[-\w]+>' => 'page/topic',
+                '<section:[-\w]+>/<topic:[-\w]+>/like/<video_id:\d+>' => 'page/like',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];

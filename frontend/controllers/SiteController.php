@@ -1,9 +1,14 @@
 <?php
 namespace frontend\controllers;
 
+//use common\helpers\myHelpers;
+use common\models\Section;
+use common\models\User;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -11,7 +16,13 @@ use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
-use frontend\models\ContactForm;
+
+//use frontend\models\ContactForm;
+//use yii\helpers\FileHelper;
+use common\models\Video;
+use common\models\Image;
+use yii\imagine\Image as Imagine;
+
 
 /**
  * Site controller
@@ -34,7 +45,7 @@ class SiteController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'video'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -72,7 +83,9 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->render('index', [
+            'sections' => Section::getActiveSectionArray(),
+        ]);
     }
 
     /**
@@ -90,6 +103,9 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
+            /** ToDo
+             * add user no active error
+             */
             return $this->render('login', [
                 'model' => $model,
             ]);
@@ -106,39 +122,6 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
     }
 
     /**
@@ -209,5 +192,105 @@ class SiteController extends Controller
         return $this->render('resetPassword', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * Generate and show image thumbnails
+     *
+     * @param $id
+     * @param int $width
+     * @param int $height
+     * @throws NotFoundHttpException
+     */
+    public function actionImage($id, $width = 0, $height = 0)
+    {
+        $image = Image::findOne($id);
+
+        if (!$image) {
+            throw new NotFoundHttpException('The requested image does not exist.');
+        }
+
+        $args = func_get_args();
+        $width = 300;
+        $height = 200;
+
+        if ($args[1]) {
+            $width = $args[1];
+            if (!$args[2]) {
+                $height = $width;
+            } else {
+                $height = $args[2] ? $args[2] : 200;
+            }
+        }
+
+        $dir = Image::getImageParentFolderPath();
+        $path = $dir . '/' . $image->path;
+        $thumb = Yii::getAlias('@storage/thumbnails/' . sha1($image->path . $width . $height) . '.jpg');
+
+        if (!file_exists($thumb)) {
+            Imagine::thumbnail($path, $width, $height)->save($thumb, ['quality' => 90]);
+            // Imagine::getImagine()->open($path)->thumbnail(new Box($width, $height))->save($thumb, ['quality' => 90]);
+        }
+
+        /** ToDo
+         * change to xSendFile()
+         * http://www.yiiframework.com/doc-2.0/yii-web-response.html#xSendFile()-detail
+         */
+        Yii::$app->response->sendFile($thumb)->send();
+    }
+
+    /**
+     * Gives video with verification of access rights
+     *
+     * @param $name
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionVideo($name)
+    {
+        $user = Yii::$app->user;
+        $video = Video::findOne(['path' => $name]);
+        $dir = Video::getVideoParentFolderPath();
+
+        if (!$video) {
+            throw new NotFoundHttpException('The requested video does not exist.');
+        }
+
+        if (!$user->identity->hasAccessFor($video->topic->section)) {
+            throw new ForbiddenHttpException('You do not have access to this video.');
+        }
+
+        /** ToDo
+         * change to xSendFile()
+         * http://www.yiiframework.com/doc-2.0/yii-web-response.html#xSendFile()-detail
+         */
+        Yii::$app->response->sendFile($dir . '/' . $name)->send();
+    }
+
+    /**
+     * Confirm email
+     *
+     * @param $token
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionVerify($token)
+    {
+        $user = User::findBySecretKey($token);
+
+        if (!$user) {
+            throw new NotFoundHttpException('Wrong verification token.');
+        }
+
+        $user->removeSecretKey();
+        $user->status = User::STATUS_ACTIVE;
+
+        if ($user->save()) {
+            Yii::$app->session->setFlash('success', 'Account activated.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Account not activated.');
+        }
+
+        return $this->goHome();
     }
 }

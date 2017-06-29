@@ -1,7 +1,9 @@
 <?php
 namespace frontend\models;
 
+use Yii;
 use yii\base\Model;
+use yii\helpers\Html;
 use common\models\User;
 
 /**
@@ -46,13 +48,35 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
+
+        $userExists = (bool)User::find()->one();
+
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
         $user->generateAuthKey();
-        
+
+        if ($userExists) {
+            $user->generateSecretKey();
+
+            Yii::$app
+                ->mailer
+                ->compose(
+                    ['html' => 'userActivationToken-html', 'text' => 'userActivationToken-text'],
+                    ['user' => $user]
+                )
+                ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+                ->setTo($this->email)
+                ->setSubject(Yii::$app->name . '. Account activation for ' . Html::encode($user->username))
+                ->send();
+
+            Yii::$app->session->setFlash('info', 'Check your email for further instructions.');
+        } else {
+            /** если в базе нет пользователей - присваиваем роль админа */
+            $user->role = User::ROLE_ADMIN;
+        }
+
         return $user->save() ? $user : null;
     }
 }

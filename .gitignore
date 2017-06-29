@@ -33,3 +33,9 @@ phpunit.phar
 
 # vagrant runtime
 /.vagrant
+/composer.lock
+/common/rbac/assignments.php
+/common/rbac/items.php
+/common/rbac/rules.php
+images/section/test0/
+images/section/

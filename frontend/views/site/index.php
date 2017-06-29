@@ -1,53 +1,53 @@
 <?php
 
+use common\helpers\myHelpers;
+use yii\helpers\Html;
+use yii\helpers\Url;
+
 /* @var $this yii\web\View */
+/** @var \common\models\Section $sections */
 
-$this->title = 'My Yii Application';
+$this->title = 'Sections';
+/*
 ?>
-<div class="site-index">
-
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+<div class="row">
+    <?php
+    foreach ($sections as $section) {
+        ?>
+        <div class="col-lg-3 col-sm-6">
+            <div class="box">
+                <?= myHelpers::imgPreview(
+                    $section->image->getThumbnailUrl(),
+                    Url::to(['/page/section', 'section' => $section->slug])
+                ) ?>
+                <div class="info">
+                    <div class="name"><?= Html::encode($section->name) ?></div>
+                </div>
             </div>
         </div>
+    <?php } ?>
+</div>
+*/
+?>
 
-    </div>
+<div class="row">
+    <?php
+    foreach ($sections as $section) {
+        ?>
+        <div class="col-lg-3 col-sm-6">
+            <div class="thumbnail">
+                <?= myHelpers::imgPreview(
+                    $section->image->getThumbnailUrl(),
+                    Url::to(['/page/section', 'section' => $section->slug])
+                ) ?>
+                <div class="caption">
+                    <h4 class="name"><?= Html::encode($section->name) ?></h4>
+                    <p>
+                        <a href="<?= Url::to(['/page/section', 'section' => $section->slug]) ?>" class="btn btn-primary"
+                           role="button">View >></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
 </div>
