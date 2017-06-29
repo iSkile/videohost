@@ -73,8 +73,9 @@ class SignupForm extends Model
 
             Yii::$app->session->setFlash('info', 'Check your email for further instructions.');
         } else {
-            /** если в базе нет пользователей - присваиваем роль админа */
+            /** если в базе нет пользователей - присваиваем роль админа и активированный статус */
             $user->role = User::ROLE_ADMIN;
+            $user->status = User::STATUS_ACTIVE;
         }
 
         return $user->save() ? $user : null;
