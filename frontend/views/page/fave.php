@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <? if (count($models) == 0) { ?>
     <h1 class="vertical-center">
-        <i class="glyphicon glyphicon-info-sign"></i> It's empty, but it's temporary
+        <i class="glyphicon glyphicon-info-sign"></i> You have not added any videos to your favorites yet
     </h1>
 <? } else { ?>
     <div class="row">
