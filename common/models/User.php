@@ -152,8 +152,8 @@ class User extends ActiveRecord implements IdentityInterface
                 self::STATUS_DELETED,
             ]],
 
-            ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            ['password', 'required', 'on' => 'setPassword'],
+            ['password', 'string', 'min' => 6, 'on' => 'setPassword'],
         ];
     }
 
@@ -209,8 +209,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function setPassword($password)
     {
         $this->password = $password;
+        $this->scenario = 'setPassword';
         if ($this->validate(['password'])) {
             $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+            $this->scenario = 'default';
         }
     }
 
