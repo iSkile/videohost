@@ -98,6 +98,10 @@ body {
     margin-right: auto;
 }
 
+#description {
+    word-wrap: break-word;
+}
+
 #fave {
     transition: all 200ms;
 }
