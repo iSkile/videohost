@@ -229,7 +229,7 @@ class SiteController extends Controller
         list($img_width, $img_height) = getimagesize($path);
 
         if ($width > $img_width && $height > $img_height) {
-            return $this->redirect($image->getURL(), 302)->send();
+            $this->redirect($image->getURL(), 302)->send();
         }
 
         $thumb = $image->getThumbnailPath($width, $height);
