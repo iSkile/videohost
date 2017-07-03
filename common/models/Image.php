@@ -221,4 +221,11 @@ class Image extends \yii\db\ActiveRecord
             //log
         }
     }
+
+    public function delete()
+    {
+        $this->clearImages();
+
+        return parent::delete();
+    }
 }

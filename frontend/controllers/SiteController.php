@@ -251,8 +251,9 @@ class SiteController extends Controller
         $user = Yii::$app->user;
         $video = Video::findOne(['path' => $name]);
         $dir = Video::getVideoParentFolderPath();
+        $path = $dir . '/' . $name;
 
-        if (!$video) {
+        if (!$video || !file_exists($path)) {
             throw new NotFoundHttpException('The requested video does not exist.');
         }
 
@@ -264,7 +265,7 @@ class SiteController extends Controller
          * change to xSendFile()
          * http://www.yiiframework.com/doc-2.0/yii-web-response.html#xSendFile()-detail
          */
-        Yii::$app->response->sendFile($dir . '/' . $name)->send();
+        Yii::$app->response->sendFile($path)->send();
     }
 
     /**

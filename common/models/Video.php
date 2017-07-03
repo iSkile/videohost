@@ -250,4 +250,18 @@ class Video extends \yii\db\ActiveRecord
     {
         return Yii::getAlias('@storage/videos');
     }
+
+    public function afterDelete()
+    {
+        $path = self::getVideoParentFolderPath() . '/' . $this->path;
+        try {
+            unlink($path);
+        } catch (\Exception $exception) {
+            //log
+        }
+
+        $this->image->delete();
+
+        return parent::afterDelete();
+    }
 }
