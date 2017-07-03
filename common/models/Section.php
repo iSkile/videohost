@@ -268,9 +268,7 @@ class Section extends \yii\db\ActiveRecord
         //$this->name = $this->name . $this->id;
         //$this->slug = $this->slug . $this->id;
 
-        /** ToDo
-         * Image delete
-         */
+        $this->image->clearThumbnails();
 
         return $this->save();
     }

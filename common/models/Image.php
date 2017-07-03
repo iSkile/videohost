@@ -181,7 +181,8 @@ class Image extends \yii\db\ActiveRecord
         }
 
         if (!$modelImage->isNewRecord) {
-            $modelImage->clearImages();
+            $modelImage->clearThumbnails();
+            $modelImage->deleteImage();
         }
 
         /** делаем необходинмые манипуляции с обьектом картинки  */
@@ -204,18 +205,28 @@ class Image extends \yii\db\ActiveRecord
     }
 
     /**
-     * delete all thumbnails and image
+     * delete all thumbnail images
      */
-    public function clearImages()
+    public function clearThumbnails()
     {
-        $path = self::getImageParentFolderPath() . '/' . $this->path;
         $thumbnails = glob($this->getThumbnailPath('*', '*'));
 
         try {
             foreach ($thumbnails as $thumbnail) {
                 unlink($thumbnail);
             }
+        } catch (\Exception $exception) {
+            //log
+        }
+    }
 
+    /**
+     * delete image
+     */
+    private function deleteImage()
+    {
+        $path = self::getImageParentFolderPath() . '/' . $this->path;
+        try {
             unlink($path);
         } catch (\Exception $exception) {
             //log
@@ -224,7 +235,8 @@ class Image extends \yii\db\ActiveRecord
 
     public function delete()
     {
-        $this->clearImages();
+        $this->clearThumbnails();
+        $this->deleteImage();
 
         return parent::delete();
     }
