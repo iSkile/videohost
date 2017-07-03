@@ -215,16 +215,23 @@ class SiteController extends Controller
         $height = 200;
 
         if ($args[1]) {
-            $width = $args[1];
+            $width = (int)$args[1];
             if (!$args[2]) {
                 $height = $width;
             } else {
-                $height = $args[2] ? $args[2] : 200;
+                $height = $args[2] ? (int)$args[2] : 200;
             }
         }
 
+
         $dir = Image::getImageParentFolderPath();
         $path = $dir . '/' . $image->path;
+        list($img_width, $img_height) = getimagesize($path);
+
+        if ($width > $img_width && $height > $img_height) {
+            return $this->redirect($image->getURL(), 302)->send();
+        }
+
         $thumb = $image->getThumbnailPath($width, $height);
 
         if (!file_exists($thumb)) {
