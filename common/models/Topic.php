@@ -14,6 +14,7 @@ use yii\helpers\Html;
  * @property integer $id
  * @property string $name
  * @property string $slug
+ * @property string $description
  * @property integer $status
  * @property integer $section_id
  * @property integer $created_at
@@ -52,9 +53,9 @@ class Topic extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'slug', 'section_id'], 'required'],
+            [['name', 'slug', 'section_id', 'description'], 'required'],
             [['status', 'section_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
-            [['name', 'slug'], 'string', 'max' => 255],
+            [['name', 'slug', 'description'], 'string', 'max' => 255],
             [['name', 'slug'], 'unique'],
             [['slug'], 'match', 'pattern' => '/^[a-z\d\-\_]+$/i', 'message' => 'Only letters, numbers, hyphens, and underscores'],
             [['section_id'], 'exist', 'skipOnError' => true, 'targetClass' => Section::className(), 'targetAttribute' => ['section_id' => 'id']],
@@ -77,6 +78,7 @@ class Topic extends \yii\db\ActiveRecord
             'name' => 'Name',
             'slug' => 'Slug',
             'status' => 'Status',
+            'description' => 'Description',
             'section_id' => 'Section ID',
             'created_at' => 'Created At',
             'created_by' => 'Created By',

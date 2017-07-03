@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::a(Html::encode($data->name), $data->id);
                 },
             ],
+            'description',
             [
                 'attribute' => 'slug',
                 'format' => 'html',

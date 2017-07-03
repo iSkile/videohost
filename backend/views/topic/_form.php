@@ -16,6 +16,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'description')->textarea(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'status')->dropDownList([
         \common\models\Topic::STATUS_ACTIVE => 'Active',
         \common\models\Topic::STATUS_INV => 'Invisible',

@@ -79,7 +79,15 @@ body {
 }
 
 .topic {
-    margin: 2em 0;
+    margin: 1em 0;
+    background-color: white;
+    border-radius: 4px;
+    padding: 1em;
+    border: 1px solid #ecf0f1;
+}
+
+.topic h2 {
+    margin-top: 0;
 }
 
 .video-js {
