@@ -230,7 +230,6 @@ class Section extends \yii\db\ActiveRecord
             /** Пользуемся своей функцией для аплоада картинки, получаем обьект картинки */
             if ($image = Image::upload($this, 'sections', $this->image ? $this->image->id : null)) {
                 $this->image_id = $image->id;
-                $this->scenario = 'default';
                 return true;
             }
         }

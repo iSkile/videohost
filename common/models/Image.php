@@ -22,6 +22,8 @@ use yii\helpers\FileHelper;
  * @property integer $id
  * @property string $name
  * @property string $path
+ * @property integer $width
+ * @property integer $height
  * @property integer $created_at
  * @property integer $created_by
  * @property integer $updated_at
@@ -58,7 +60,7 @@ class Image extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'path'], 'required'],
-            [['created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
+            [['width', 'height', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 100],
             [['path'], 'string', 'max' => 255],
             'imageFile' => self::getRule(),
@@ -74,6 +76,8 @@ class Image extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'path' => 'Path',
+            'width' => 'Width',
+            'height' => 'Height',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -158,6 +162,7 @@ class Image extends \yii\db\ActiveRecord
      */
     public static function upload($model, $folder, $id = null)
     {
+        /** @var yii\web\UploadedFile $file */
         $file = &$model->imageFile;
 
         if (!$file) {
@@ -178,9 +183,6 @@ class Image extends \yii\db\ActiveRecord
             $modelImage = new Image();
         } else {
             $modelImage = Image::findOne($id);
-        }
-
-        if (!$modelImage->isNewRecord) {
             $modelImage->clearThumbnails();
             $modelImage->deleteImage();
         }
@@ -190,10 +192,14 @@ class Image extends \yii\db\ActiveRecord
         $modelImage->path = $folder . "/$imageName";
         $modelImage->imageFile = $file;
 
+
+        list($width, $height) = getimagesize($file->tempName);
+        $modelImage->width = $width;
+        $modelImage->height = $height;
+
         if ($modelImage->save()) {
             FileHelper::createDirectory($directory, 0644);
-            $file->saveAs("$directory/$imageName");
-            $model->imageFile = null;
+            $file->saveAs("$directory/$imageName", false);
             return $modelImage;
         } else {
             $model->addErrors(

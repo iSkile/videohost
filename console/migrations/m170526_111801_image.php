@@ -15,6 +15,8 @@ class m170526_111801_image extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string(100)->notNull(),
             'path' => $this->string(255)->notNull(),
+            'width' => $this->integer()->notNull(),
+            'height' => $this->integer()->notNull(),
             'created_at' => $this->integer(),
             'created_by' => $this->integer(),
             'updated_at' => $this->integer(),

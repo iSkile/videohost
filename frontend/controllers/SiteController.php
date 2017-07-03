@@ -226,9 +226,8 @@ class SiteController extends Controller
 
         $dir = Image::getImageParentFolderPath();
         $path = $dir . '/' . $image->path;
-        list($img_width, $img_height) = getimagesize($path);
 
-        if ($width > $img_width && $height > $img_height) {
+        if ($width > $image->width && $height > $image->height) {
             $this->redirect($image->getURL(), 302)->send();
         }
 
