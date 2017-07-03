@@ -225,7 +225,7 @@ class SiteController extends Controller
 
         $dir = Image::getImageParentFolderPath();
         $path = $dir . '/' . $image->path;
-        $thumb = Yii::getAlias('@storage/thumbnails/' . sha1($image->path . $width . $height) . '.jpg');
+        $thumb = $image->getThumbnailPath($width, $height);
 
         if (!file_exists($thumb)) {
             Imagine::thumbnail($path, $width, $height)->save($thumb, ['quality' => 90]);

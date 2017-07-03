@@ -42,6 +42,15 @@ class Image extends \yii\db\ActiveRecord
         return 'image';
     }
 
+
+    /**
+     * @return array with image rules
+     */
+    public static function getRule()
+    {
+        return ['imageFile', 'image', 'extensions' => 'png, jpg, gif'];
+    }
+
     /**
      * @inheritdoc
      */
@@ -108,11 +117,6 @@ class Image extends \yii\db\ActiveRecord
         return $this->hasMany(Video::className(), ['image_id' => 'id']);
     }
 
-    public static function getRule()
-    {
-        return ['imageFile', 'image', 'extensions' => 'png, jpg, gif'];
-    }
-
     public static function getImageParentFolderPath()
     {
         return FileHelper::normalizePath(Yii::getAlias('@frontend/web/images/'));
@@ -141,6 +145,11 @@ class Image extends \yii\db\ActiveRecord
         return Yii::$app->request->hostInfo . '/image/' . $this->id . $params;
     }
 
+    public function getThumbnailPath($width, $height)
+    {
+        return Yii::getAlias('@storage/thumbnails/' . sha1($this->path) . ($width . 'x' . $height) . '.jpg');
+    }
+
     /**
      * @param $model Model Сюда мы передадим обьект модели с файлом в поле imageFile
      * @param $folder string Имя папки, в которую мы загрузим файл
@@ -160,17 +169,19 @@ class Image extends \yii\db\ActiveRecord
         // поэтому я выбрал  что первой частью имени будет текущий timestamp, а второй - уникальный набор символов.
         $imageName = time() . uniqid() . '.' . $file->extension;
 
-        //берем полный путь папки в которую юудем загружать картинки
+        // берем полный путь папки в которую юудем загружать картинки
         $path = self::getImageParentFolderPath();
 
         $directory = $path . '/' . $folder;
 
         if (!$id) {
             $modelImage = new Image();
-            $oldImage = false;
         } else {
             $modelImage = Image::findOne($id);
-            $oldImage = $path . '/' . $modelImage->path;
+        }
+
+        if (!$modelImage->isNewRecord) {
+            $modelImage->clearImages();
         }
 
         /** делаем необходинмые манипуляции с обьектом картинки  */
@@ -180,13 +191,6 @@ class Image extends \yii\db\ActiveRecord
 
         if ($modelImage->save()) {
             FileHelper::createDirectory($directory, 0644);
-            try {
-                if ($oldImage && file_exists($oldImage)) {
-                    unlink($oldImage);
-                }
-            } catch (\Exception $exception) {
-                //log
-            }
             $file->saveAs("$directory/$imageName");
             $model->imageFile = null;
             return $modelImage;
@@ -197,5 +201,24 @@ class Image extends \yii\db\ActiveRecord
         }
 
         return null;
+    }
+
+    /**
+     * delete all thumbnails and image
+     */
+    public function clearImages()
+    {
+        $path = self::getImageParentFolderPath() . '/' . $this->path;
+        $thumbnails = glob($this->getThumbnailPath('*', '*'));
+
+        try {
+            foreach ($thumbnails as $thumbnail) {
+                unlink($thumbnail);
+            }
+
+            unlink($path);
+        } catch (\Exception $exception) {
+            //log
+        }
     }
 }
