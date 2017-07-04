@@ -69,8 +69,42 @@ body {
     text-overflow: ellipsis;
 }
 
+.img-preview:before {
+    content: "\e029";
+
+    position: absolute;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 45px;
+    padding: 6px 5px 4px;
+    border-radius: 100%;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    background: rgb(44, 62, 80);
+    color: #ECEFF1;
+
+    transition: all .2s;
+    opacity: .7;
+}
+
+.box:hover .img-preview:before {
+    opacity: .9;
+}
+
 .thumbnail {
     padding: 0;
+    overflow: hidden;
 }
 
 .thumbnail > .caption > .name {
