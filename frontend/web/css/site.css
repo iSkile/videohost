@@ -24,6 +24,7 @@ body {
     border: 1px solid #ecf0f1;
     border-radius: 4px;
     cursor: pointer;
+    overflow: hidden;
 }
 
 .img-preview {
@@ -38,6 +39,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    z-index: 3;
+    position: relative;
 }
 
 .img-preview > img {
@@ -91,15 +95,33 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    background: rgb(44, 62, 80);
+    background: #607D8B;
     color: #ECEFF1;
 
     transition: all .2s;
-    opacity: .7;
+    opacity: .8;
+    z-index: 2;
 }
 
 .box:hover .img-preview:before {
     opacity: .9;
+}
+
+.img-preview:after {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: black;
+    opacity: 0;
+    transition: opacity .2s;
+}
+
+.box:hover .img-preview:after {
+    opacity: .2;
 }
 
 .thumbnail {
