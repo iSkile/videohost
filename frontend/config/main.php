@@ -45,11 +45,9 @@ return [
                 'image/<id:\d+>/<width:\d+>/<height:\d+>' => 'site/image',
                 'image/<id:\d+>/<width:\d+>' => 'site/image',
                 'image/<id:\d+>' => 'site/image',
-                'verify/<token:[-\w]+>' => 'site/verify',
-                'site/<id:\d+>' => 'site/view',
-                'site/<action:\w+>/<id:\d+>' => 'site/<action>',
-                'site/<action:\w+>' => 'site/<action>',
                 'fave' => 'page/fave',
+                //'<action:\w+>/<id:\d+>' => 'site/<action>',
+                'site/<action:[-\w]+>' => 'site/<action>',
 
                 '<section:[-\w]+>' => 'page/section',
                 '<section:[-\w]+>/<topic:[-\w]+>' => 'page/topic',
