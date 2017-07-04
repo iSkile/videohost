@@ -19,9 +19,10 @@ body {
 .box {
     margin: 1em 0;
     /* text-align: center; */
-    box-shadow: 0 0 4px #cbcbcb;
+    /*box-shadow: 0 0 4px #cbcbcb;*/
     background-color: #fff;
-    /*border: 1px solid #fafafa;*/
+    border: 1px solid #ecf0f1;
+    border-radius: 4px;
     cursor: pointer;
 }
 
