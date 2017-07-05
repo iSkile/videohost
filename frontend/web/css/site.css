@@ -73,7 +73,7 @@ body {
     text-overflow: ellipsis;
 }
 
-.img-preview:before {
+.box .img-preview:before {
     content: "\e029";
 
     position: absolute;
@@ -107,7 +107,7 @@ body {
     opacity: .9;
 }
 
-.img-preview:after {
+.box .img-preview:after {
     content: " ";
     position: absolute;
     top: 0;
