@@ -4,6 +4,7 @@ use common\helpers\myHelpers;
 use yii\helpers\FileHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\widgets\LinkPager;
 
 $dir = common\models\Video::getVideoParentFolderPath();
 $user = Yii::$app->user;
@@ -45,6 +46,10 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         <? } ?>
     </div>
+
+    <?= LinkPager::widget([
+        'pagination' => $pages,
+    ]); ?>
 
     <!-- Video Modal -->
     <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel">

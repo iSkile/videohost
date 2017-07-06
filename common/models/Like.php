@@ -62,9 +62,4 @@ class Like extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Video::className(), ['id' => 'video_id']);
     }
-
-    public static function getVideosArray()
-    {
-        return self::findAll(['user_id' => Yii::$app->user->id]);
-    }
 }

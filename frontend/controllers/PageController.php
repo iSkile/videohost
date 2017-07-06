@@ -14,6 +14,8 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Response;
 
+use yii\data\Pagination;
+
 class PageController extends Controller
 {
     /**
@@ -69,18 +71,33 @@ class PageController extends Controller
             throw new NotFoundHttpException('The requested topic does not exist.');
         }
 
+        $query = $model->getVideos();
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count()]);
+        $videos = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+
+
         return $this->render('topic', [
             'model' => $model,
-            'topics' => $model->videos
+            'videos' => $videos,
+            'pages' => $pages,
         ]);
     }
 
     public function actionFave()
     {
-        $models = Like::getVideosArray();
+        $query = Like::find()->where(['user_id' => Yii::$app->user->id]);
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count()]);
+        $models = $query->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
 
         return $this->render('fave', [
-            'models' => $models
+            'models' => $models,
+            'pages' => $pages,
         ]);
     }
 

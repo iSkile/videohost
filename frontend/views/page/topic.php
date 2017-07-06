@@ -4,6 +4,7 @@ use common\helpers\myHelpers;
 use yii\helpers\FileHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\widgets\LinkPager;
 
 $dir = common\models\Video::getVideoParentFolderPath();
 $user = Yii::$app->user;
@@ -21,13 +22,14 @@ $this->params['breadcrumbs'][] = ['label' => $model->section->name, 'url' => ['/
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<? if (count($model->videos) == 0) { ?>
+<? /** @var array $videos */
+if (count($videos) == 0) { ?>
     <h1 class="vertical-center">
         <i class="glyphicon glyphicon-info-sign"></i> It's empty, but it's temporary
     </h1>
 <? } else { ?>
     <div class="row">
-        <? foreach ($model->videos as $video) { ?>
+        <? foreach ($videos as $video) { ?>
             <div class="col-lg-3 col-sm-6">
                 <? if ($access) { ?>
                     <div class="box"
@@ -63,6 +65,11 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         <? } ?>
     </div>
+
+    <?= /** @var \yii\data\Pagination $pages */
+    LinkPager::widget([
+        'pagination' => $pages,
+    ]); ?>
 
 
     <? if ($access) { ?>
