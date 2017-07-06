@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'name',
                 'format' => 'html',
                 'content' => function ($data) {
-                    return Html::a(Html::encode($data->name), $data->id);
+                    return Html::a(Html::encode($data->name), 'view?id=' . $data->id);
                 },
             ],
             'description',
